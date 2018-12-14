@@ -8,8 +8,8 @@ from colormath.color_diff import delta_e_cie2000
 
 #TODO: Config file or environment variables for token
 TOKEN = ''
-DISCORD_DARK_COLOR = 0x2C2F33
-DISCORD_LIGHT_COLOR = 0xFFFFFF
+DISCORD_DARK_COLOR = convert_color(sRGBColor.new_from_rgb_hex('2C2F33'), LabColor)
+DISCORD_LIGHT_COLOR = convert_color(sRGBColor.new_from_rgb_hex('FFFFFF'), LabColor)
 
 #TODO: Max number of colors allowed -> print a list of current colors the user can pick from
 #TODO: Clean up after bot/user messages
@@ -37,13 +37,6 @@ async def on_ready():
 
     print('Cleaning up unused roles...')
     await cleanup_roles()
-
-    print('Creating Color objects for background similarity check...')
-    global DISCORD_DARK_COLOR
-    global DISCORD_LIGHT_COLOR
-    DISCORD_DARK_COLOR = convert_color(sRGBColor.new_from_rgb_hex('2C2F33'), LabColor)
-    DISCORD_LIGHT_COLOR  = convert_color(sRGBColor.new_from_rgb_hex('FFFFFF'), LabColor)
-
 
 @client.event
 async def on_message(message):
