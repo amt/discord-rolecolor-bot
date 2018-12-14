@@ -63,12 +63,12 @@ async def on_message(message):
         light_delta_e = delta_e_cie2000(test_color, DISCORD_LIGHT_COLOR)
         logger.debug("Light DeltaE Test (light_delta_e, test_color_hex): {} {}".format(str(light_delta_e), message.content[1:]))
 
-        if dark_delta_e <= 1.0:
-            await message.channel.send('Color is too similar to dark background. Try another color.')
+        if dark_delta_e <= 13.0:
+            await message.channel.send('That is too similar to dark background. Try another color.')
             return
 
-        if  light_delta_e <= 1.0:
-            await message.channel.send('Color is too similar to light background. Try another color.')
+        if  light_delta_e <= 13.0:
+            await message.channel.send('That is too similar to light background. Try another color.')
             return
 
 
