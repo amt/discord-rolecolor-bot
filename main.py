@@ -23,7 +23,7 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 # Instantiate bot client
-client = discord.Client()
+client = discord.Client(activity=discord.Game(name='&help'))
 
 
 @client.event
@@ -40,7 +40,7 @@ async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     print('Cleaning up unused roles...')
     await cleanup_roles()
-    print('Done cleaning up unused roles.')
+    print('Done cleaning up unused roles')
 
 
 @client.event
@@ -52,13 +52,17 @@ async def on_message(message):
     if not message.content.startswith('&'):
         return
 
+    if message.content == '&help':
+        await message.channel.send('Enter a hex code to get a colored name\nExample: &FFFAAA\nSee: https://www.w3schools.com/colors/colors_picker.asp')
+        return
+
     # Important so that we aren't duplicating upper/lowercase versions of the role
     message.content = message.content.upper()
 
     # Check validness of color code
     # TODO: Maybe add support for 3 long hexcodes that would just be expanded
     if not re.search(r'^(?:[0-9a-fA-F]){6}$', message.content[1:]):
-        await message.channel.send('Invalid hex color code. Example: &FFFAAA')
+        await message.channel.send('Invalid hex color code\nExample: &FFFAAA\nSee: https://www.w3schools.com/colors/colors_picker.asp')
         return
 
     # Check for similarity to background colors so names are visible still
@@ -72,11 +76,11 @@ async def on_message(message):
     logger.debug("Light DeltaE Test (light_delta_e, test_color_hex): {} {}".format(str(light_delta_e), message.content[1:]))
 
     if dark_delta_e <= 13.0:
-        await message.channel.send('That is too similar to dark background. Try another color.')
+        await message.channel.send('That is too similar to Discord\'s dark background.\nTry another color.')
         return
 
     if light_delta_e <= 13.0:
-        await message.channel.send('That is too similar to light background. Try another color.')
+        await message.channel.send('That is too similar to Discord\'s light background.\nTry another color.')
         return
 
     role = discord.utils.get(message.guild.roles, name=message.content[1:])
