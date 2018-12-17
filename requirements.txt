@@ -1,0 +1,2 @@
+discord.py >= 1.0.0a1621+g66e5033
+colormath == 3.0.0
