@@ -33,3 +33,6 @@ You can check this by making sure all non-bot roles are set to the default:
 ![alt-text](https://i.imgur.com/oFAyCNv.png)
 
 The bot will delete any unused roles that are valid hex color codes if those are being used as role names.
+
+After usage, the "Roles" list will look as follows:
+![alt-text](https://i.imgur.com/qWz8N4O.png)
