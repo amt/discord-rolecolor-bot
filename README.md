@@ -17,6 +17,12 @@ Required:
 
     * Follow the steps [here](https://discordpy.readthedocs.io/en/rewrite/discord.html#discord-intro)
 
+3. Add your bot token to your environment variables
+    * Linux 
+      * ```export DISCORD_COLOR_BOT_TOKEN=YOUR_TOKEN_HERE```
+    * Windows
+      *  ```set DISCORD_COLOR_BOT_TOKEN=YOUR_TOKEN_HERE```
+
 ## Usage
 
 ```sh
