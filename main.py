@@ -10,19 +10,24 @@ def get_prefix(bot, message):
     prefixes = ['&']
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
+
 initial_extensions = [
     'cogs.colors',
 ]
+
 embed = discord.Embed(title="Commands:", description="", color=0xFF1515)
+
+# Create instance of bot and remove ugly default help command
+bot = commands.Bot(command_prefix=get_prefix,
+                   description='Discord ColorBot', help_command=None)
 
 
 def main():
-    # Create instance of bot and remove ugly default help command
-    bot = commands.Bot(command_prefix=get_prefix, description='Discord ColorBot', help_command=None)
 
     # TODO: Move these to the color cog and build the embed as cogs are loaded
     embed.add_field(name="&help", value="Prints this message", inline=False)
-    embed.add_field(name="&color <color>", value="Assign colors using 6 digit hex codes\nExample Usage: &color FABCDE\nSee: https://www.google.com/search?q=color+picker", inline=False)
+    embed.add_field(name="&color <color>",
+                    value="Assign colors using 6 digit hex codes\nExample Usage: &color FABCDE\nSee: https://www.google.com/search?q=color+picker", inline=False)
     embed.add_field(name="&clear", value="Remove color", inline=False)
 
     for extension in initial_extensions:
@@ -36,13 +41,13 @@ def main():
     bot.run(os.environ.get('DISCORD_COLOR_BOT_TOKEN'), bot=True, reconnect=True)
 
 
-if __name__ == '__main__':
-    main()
-
-
 @bot.event
 async def on_ready():
-    print(f'\n\nLogged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n')
+    print(f'\nLogged in as: {bot.user.name} - {bot.user.id}\n')
+    print(f'Version: {discord.__version__}')
 
-    await bot.change_presence(activity=discord.Game(name='&help'))
+    await bot.change_presence(activity=discord.Game(name='&help | now on heroku!'))
     print(f'Successfully logged in and booted...!')
+
+if __name__ == '__main__':
+    main()

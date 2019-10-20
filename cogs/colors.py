@@ -6,20 +6,21 @@ from colormath.color_objects import sRGBColor, LabColor
 from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cie2000
 
-DISCORD_DARK_COLOR = convert_color(sRGBColor.new_from_rgb_hex('2C2F33'), LabColor)
-DISCORD_LIGHT_COLOR = convert_color(sRGBColor.new_from_rgb_hex('FFFFFF'), LabColor)
+DISCORD_DARK_COLOR = convert_color(
+    sRGBColor.new_from_rgb_hex('2C2F33'), LabColor)
+DISCORD_LIGHT_COLOR = convert_color(
+    sRGBColor.new_from_rgb_hex('FFFFFF'), LabColor)
+
 
 class RoleColorsCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
 
     @commands.Cog.listener()
     async def on_ready(self):
         # Run global cleanup once on startup if role color cog is loaded
         for guild in self.bot.guilds:
             await self.cleanup_roles(guild)
-
 
     @commands.command(pass_context=True)
     async def color(self, ctx):
@@ -31,7 +32,7 @@ class RoleColorsCog(commands.Cog):
         if not re.search(r'^(?:[0-9a-fA-F]){6}$', ctx.message.content):
             await ctx.channel.send('Invalid color\nExample Usage: &color FABCDE')
             return
-        
+
         # Check for similarity to background colors so names are visible still
         test_color = convert_color(
             sRGBColor.new_from_rgb_hex(ctx.message.content), LabColor)
@@ -45,7 +46,7 @@ class RoleColorsCog(commands.Cog):
             return
 
         if light_delta_e <= 13.0:
-            await ctx.channel.send('Try another color.\n Too similar to Discord\'s light background.')
+            await ctx.channel.send('Try another color.\nToo similar to Discord\'s light background.')
             return
 
         # Remove old color roles
@@ -66,7 +67,6 @@ class RoleColorsCog(commands.Cog):
         await ctx.channel.send('Added role')
         await self.cleanup_roles(ctx.guild)
 
-
     @commands.command(pass_context=True)
     async def clear(self, ctx):
         if ctx.message.content == '&clear':
@@ -77,7 +77,6 @@ class RoleColorsCog(commands.Cog):
                         await role.delete(reason="Removing unused color")
             await ctx.message.channel.send('User color managed by bot cleared!')
 
-
     async def cleanup_roles(self, guild):
         print(f"\tCleaning up -- {guild}")
         for role in guild.roles:
@@ -87,6 +86,7 @@ class RoleColorsCog(commands.Cog):
                 except:
                     print(f"\t\tFailed to clean up -- {guild}")
                     return
+
 
 def setup(bot):
     bot.add_cog(RoleColorsCog(bot))
