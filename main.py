@@ -13,23 +13,34 @@ def get_prefix(bot, message):
 
 initial_extensions = [
     'cogs.colors',
+    'cogs.emojis',
 ]
 
-embed = discord.Embed(title="Commands:", description="", color=0xFF1515)
 
 # Create instance of bot and remove ugly default help command
 bot = commands.Bot(command_prefix=get_prefix,
                    description='Discord ColorBot', help_command=None)
 
 
-def main():
-
-    # TODO: Move these to the color cog and build the embed as cogs are loaded
+@commands.command(pass_context=True)
+async def help(ctx):
+    embed = discord.Embed(title="Commands:", description="", color=0xFF1515)
+    # TODO: Move these to the correct cogs and build the embed as cogs are loaded
     embed.add_field(name="&help", value="Prints this message", inline=False)
+    # Colors
     embed.add_field(name="&color <color>",
                     value="Assign colors using 6 digit hex codes\nExample Usage: &color FABCDE\nSee: https://www.google.com/search?q=color+picker", inline=False)
     embed.add_field(name="&clear", value="Remove color", inline=False)
+    # Emoji
+    embed.add_field(name="&catalog",
+                    value="List available emojis", inline=False)
+    embed.add_field(name="&emoji <emojiName>",
+                    value="Tale the specified emoji and add it to this server", inline=False)
+    await ctx.message.channel.send(content="", embed=embed)
 
+
+def main():
+    bot.add_command(help)
     for extension in initial_extensions:
         try:
             bot.load_extension(extension)
