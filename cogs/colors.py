@@ -20,7 +20,7 @@ class RoleColorsCog(commands.Cog):
     async def on_ready(self):
         # Run global cleanup once on startup if role color cog is loaded
         for guild in self.bot.guilds:
-            await self.cleanup_roles(guild)
+            print(f"\tRunning in -- {guild} --")
 
     @commands.command(pass_context=True)
     async def color(self, ctx):
@@ -49,23 +49,17 @@ class RoleColorsCog(commands.Cog):
             await ctx.channel.send('Try another color.\nToo similar to Discord\'s light background.')
             return
 
-        # Remove old color roles
-        for role in ctx.author.roles:
-            if re.search(r'^(?:[0-9a-fA-F]){6}$', role.name):
-                await ctx.author.remove_roles(role, reason="Removing old color")
-                if len(role.members) == 1:
-                    await role.delete(reason="Removing unused color")
-
         role = discord.utils.get(ctx.guild.roles, name=ctx.message.content)
         # If color exists just assign it to the user
         if role:
+            print(f"Added existing role to user {ctx.author}")
             await ctx.author.add_roles(role, reason="Adding existing role to user")
         else:
+            print(f"Creating role for user {ctx.author}")
             new_role = await ctx.guild.create_role(name=ctx.message.content, color=discord.Colour(int(ctx.message.content, 16)))
             await ctx.author.add_roles(new_role, reason="Created new role for user")
 
         await ctx.channel.send('Added role')
-        await self.cleanup_roles(ctx.guild)
 
     @commands.command(pass_context=True)
     async def clear(self, ctx):
@@ -73,20 +67,7 @@ class RoleColorsCog(commands.Cog):
             for role in ctx.author.roles:
                 if re.search(r'^(?:[0-9a-fA-F]){6}$', role.name):
                     await ctx.author.remove_roles(role, reason="Removing user color by request")
-                    if len(role.members) == 1:
-                        await role.delete(reason="Removing unused color")
-            await ctx.message.channel.send('User color managed by bot cleared!')
-
-    async def cleanup_roles(self, guild):
-        print(f"\tCleaning up -- {guild}")
-        for role in guild.roles:
-            if re.search(r'^(?:[0-9a-fA-F]){6}$', role.name) and len(role.members) == 0:
-                try:
-                    await role.delete(reason="Cleaning up unused roles")
-                except:
-                    print(f"\t\tFailed to clean up -- {guild}")
-                    return
-
+            await ctx.message.channel.send('User color managed by bot cleared')
 
 def setup(bot):
     bot.add_cog(RoleColorsCog(bot))
