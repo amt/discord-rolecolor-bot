@@ -57,7 +57,7 @@ async def on_ready():
     print(f'\nLogged in as: {bot.user.name} - {bot.user.id}\n')
     print(f'Version: {discord.__version__}')
 
-    await bot.change_presence(activity=discord.Game(name='&help | now on heroku!'))
+    await bot.change_presence(activity=discord.Game(name='&help'))
     print(f'Successfully logged in and booted...!')
 
 if __name__ == '__main__':
